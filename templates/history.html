@@ -86,13 +86,19 @@
             </tr>
         </thead>
         <tbody>
-            {% for entry in history %}
+            {% if history %}
+                {% for entry in history %}
+                    <tr>
+                        <td>{{ entry.id }}</td>
+                        <td>{{ entry.comment }}</td>
+                        <td>{{ entry.sentiment }}</td>
+                    </tr>
+                {% endfor %}
+            {% else %}
                 <tr>
-                    <td>{{ entry.id }}</td>
-                    <td>{{ entry.comment }}</td>
-                    <td>{{ entry.sentiment }}</td>
+                    <td colspan="3">No history available</td>
                 </tr>
-            {% endfor %}
+            {% endif %}
         </tbody>
     </table>
     <a href="{{ url_for('analyze_sentiment') }}">Go Back to Home</a>

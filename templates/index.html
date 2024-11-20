@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <title>Sentiment Analysis</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <style>
-        /* General Reset */
-        * {
+  <style>
+  /* General Reset */
+* {
     box-sizing: border-box;
     margin: 0; /* Reset default margin */
     padding: 0; /* Reset default padding */
@@ -14,19 +14,25 @@
 
 body {
     font-family: Arial, sans-serif;
-    background-color: #f8f9fa;
+    background-color: #f4f7fb; /* Light greyish-blue background */
     padding-bottom: 70px; /* Space for fixed footer */
 }
 
 /* Header and Navigation */
 .navbar {
-    background-color: #007bff;
+    background-color: #6c63ff; /* Soft purple */
     padding: 15px 20px; /* Add padding for better spacing */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
 }
 
 .navbar-brand, .nav-link {
     color: #fff !important;
     font-weight: bold;
+    transition: color 0.3s ease-in-out;
+}
+
+.navbar-brand:hover, .nav-link:hover {
+    color: #ff69b4; /* Light pink hover effect */
 }
 
 /* Main Content Styling */
@@ -36,37 +42,51 @@ body {
     padding: 20px; /* Add padding for content spacing */
     background-color: #fff; /* White background for content area */
     border-radius: 8px; /* Rounded corners for a softer look */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1); /* More depth with soft shadow */
+    transition: transform 0.3s ease-in-out;
+}
+
+.container:hover {
+    transform: scale(1.03); /* Slight zoom effect on hover */
 }
 
 h1 {
-    color: #007bff;
-    font-size: 2em;
+    color: #6c63ff; /* Soft purple heading */
+    font-size: 2.5em;
     font-weight: bold;
+    margin-bottom: 20px;
+    text-align: center;
 }
 
 /* Button Customization */
 .btn-voice, .btn-primary, .btn-secondary, .btn-history {
     font-weight: bold;
     margin: 10px 0; /* Consistent margin for buttons */
+    padding: 12px 20px;
+    border-radius: 30px; /* Rounded buttons for a modern look */
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    text-transform: uppercase; /* Uppercase text for buttons */
+    border: none;
 }
 
 .btn-voice {
-    background-color: #28a745;
+    background: linear-gradient(135deg, #6c63ff, #00c6ff); /* Gradient from soft purple to cyan */
     color: white;
 }
 
 .btn-voice:hover {
-    background-color: #218838;
+    background: linear-gradient(135deg, #00c6ff, #6c63ff); /* Reverse gradient on hover */
+    transform: scale(1.05); /* Slight zoom effect on hover */
 }
 
 .btn-history {
-    background-color: #17a2b8;
+    background: linear-gradient(135deg, #ff6f61, #ffcc00); /* Gradient from coral to yellow */
     color: white;
 }
 
 .btn-history:hover {
-    background-color: #138496;
+    background: linear-gradient(135deg, #ffcc00, #ff6f61); /* Reverse gradient on hover */
+    transform: scale(1.05); /* Slight zoom effect on hover */
 }
 
 /* Sentiment Result Styling */
@@ -74,59 +94,158 @@ h1 {
     margin-top: 20px;
     font-weight: bold;
     text-align: center;
+    padding: 15px;
+    border-radius: 5px;
+    background-color: #f8d7da; /* Light red background for errors */
+    color: #721c24; /* Dark red text */
 }
 
 /* Footer Styling */
 footer {
-    background-color: #007bff;
+    background-color: #6c63ff; /* Soft purple */
     color: #fff;
-    padding: 15px 0;
+    padding: 25px 0;
     text-align: center;
     bottom: 0;
     left: 0;
     right: 0; /* Ensure full-width footer */
+    font-family: Arial, sans-serif;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1); /* Soft shadow on top of footer */
 }
 
-/* Banner Styling */
-.banner {
-    background-color: #007bff;
+footer h4 {
+    margin-bottom: 10px;
+    font-size: 1.5rem;
+    color: #ffcc00; /* Gold for footer heading */
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    padding: 0 20px;
+}
+
+.footer-info, .footer-links, .footer-contact {
+    flex: 1;
+    min-width: 250px;
+    margin: 10px;
+}
+
+.footer-info p {
+    margin: 5px 0;
+    font-size: 1rem;
+    color: #ddd; /* Light gray for info text */
+}
+
+.footer-links ul, .footer-contact ul {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-links li, .footer-contact li {
+    margin: 5px 0;
+    font-size: 1rem;
+}
+
+.footer-links a, .footer-contact a {
     color: #fff;
-    padding: 40px 20px; /* Added horizontal padding */
-    text-align: center;
-}
-
-.banner h1 {
-    font-size: 2.5rem;
-}
-
-.banner p {
-    margin-top: 10px;
-    font-size: 1.1rem;
-}
-
-/* Simple Footer */
-.footer {
-    background-color: #333;
-    color: #f1f1f1;
-    padding: 20px 0;
-    text-align: center;
-}
-
-.footer p {
-    margin: 0;
-    font-size: 0.9rem;
-}
-
-.footer a {
-    color: #007bff;
     text-decoration: none;
+    transition: color 0.3s ease;
 }
 
-.footer a:hover {
+.footer-links a:hover, .footer-contact a:hover {
+    color: #ffcc00; /* Gold color on hover */
     text-decoration: underline;
 }
 
-    </style>
+.footer-contact a {
+    color: #ffcc00; /* Gold for contact links */
+}
+
+.footer-contact a:hover {
+    color: #ffff00; /* Hover effect */
+}
+
+/* Banner Section */
+.banner {
+    position: relative;
+    background-color: #6c63ff; /* Soft purple */
+    color: #fff;
+    padding: 0; /* Remove padding */
+    text-align: center; /* Center text inside the container */
+    height: 400px; /* Fixed height for the banner */
+    width: 100%; /* Ensure the banner fills the width of the screen */
+    overflow: hidden; /* Hide any part of the image that overflows */
+    margin: 0 auto; /* Center the banner if needed */
+}
+
+.banner-image {
+    width: 100%; /* Ensure image takes full width */
+    height: 100%; /* Ensure image covers the full height */
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 0; /* Image stays behind the text */
+    object-position: center; /* Center the image */
+    transition: opacity 0.5s ease;
+}
+
+.banner:hover .banner-image {
+    opacity: 0.7; /* Fade image on hover */
+}
+
+/* Container for text content */
+.container {
+    position: relative;
+    z-index: 1; /* Ensure content is above the image */
+    height: 100%; /* Ensure it fills the full height */
+}
+
+/* Style for banner heading and text */
+.banner h1, .banner p {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Center the text */
+    margin: 0;
+    z-index: 1; /* Ensure the text is above the image */
+    color: white; /* Ensure text is readable */
+}
+
+/* Heading font size */
+.banner h1 {
+    font-size: 3rem; /* Adjust font size for a larger banner */
+    font-weight: bold;
+    text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.4); /* Subtle shadow for text visibility */
+}
+
+/* Paragraph font size */
+.banner p {
+    margin-top: 10px;
+    font-size: 1.2rem; /* Adjust font size for a larger banner */
+    font-style: italic;
+}
+
+/* Content Section */
+.content {
+    padding: 40px 20px;
+    text-align: center;
+}
+
+.content h2 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    color: #6c63ff; /* Soft purple */
+}
+
+.content p {
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+    color: #555;
+}
+
+</style>
 </head>
 
 <body>
@@ -148,8 +267,7 @@ footer {
 
     <section class="banner">
         <div class="container">
-            <h1>Sentiment Analysis</h1>
-            <p>Analyze customer feedback and understand their emotions</p>
+            <img src="https://miro.medium.com/max/3260/1*8XIjunF2z6dmsVlkEuOUaw.png" alt="Banner Image" class="banner-image">
         </div>
     </section>
     
@@ -167,13 +285,39 @@ footer {
         <div id="result" class="mt-4"></div>
     </div>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <p>&copy; 2024 Sentiment Analysis App. All Rights Reserved. <a href="#contact">Contact Us</a></p>
-        </div>
-    </footer>
-
+   
+    <!-- Footer Section -->
+<footer class="footer">
+    <div class="footer-content">
+      <div class="footer-info">
+        <p>&copy; 2024 Sentiment Analysis Web. All Rights Reserved.</p>
+        <p>Providing accurate sentiment insights for better understanding.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="#">Home</a></li>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Contact</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+        </ul>
+      </div>
+      <div class="footer-contact">
+        <h4>Contact</h4>
+        <ul>
+          <li>Email: <a href="mailto:support@sentimentanalysis.com">support@sentimentanalysis.com</a></li>
+          <li>Follow Us:</li>
+          <li>
+            <a href="https://facebook.com" target="_blank">Facebook</a> | 
+            <a href="https://twitter.com" target="_blank">Twitter</a> | 
+            <a href="https://linkedin.com" target="_blank">LinkedIn</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+  
+    
     <!-- Scripts -->
     <script>
         // Web Speech API for voice recognition

@@ -3,104 +3,171 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Comment History</title>
+    <title>History</title>
     <style>
-        /* Basic Reset */
-        * {
+        body {
+            font-family: 'Arial', sans-serif;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
+            background: linear-gradient(135deg, #e0f7fa, #e8eaf6);
             color: #333;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 20px;
+            justify-content: center;
         }
 
-        /* Header Styling */
         h1 {
-            font-size: 2em;
+            font-size: 2.5rem;
+            color: #1a237e;
             margin-bottom: 20px;
-            color: #2c3e50;
-            text-transform: uppercase;
-            letter-spacing: 1px;
         }
 
-        /* Table Styling */
         table {
-            width: 80%;
+            width: 90%;
             border-collapse: collapse;
-            margin: 20px 0;
-            background-color: #fff;
-            border-radius: 5px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin: 20px auto;
+            background: white;
+            border-radius: 8px;
             overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
 
         th, td {
-            padding: 12px 15px;
-            text-align: left;
-        }
-
-        th {
-            background-color: #2c3e50;
-            color: #fff;
-            font-weight: bold;
-        }
-
-        td {
-            background-color: #f9f9f9;
+            padding: 15px;
+            text-align: center;
             border-bottom: 1px solid #ddd;
         }
 
-        tr:hover td {
-            background-color: #f1f1f1;
+        th {
+            background: #3949ab;
+            color: white;
+            font-size: 1rem;
+            text-transform: uppercase;
         }
 
-        /* Link Styling */
-        a {
-            margin-top: 20px;
-            text-decoration: none;
-            color: #2c3e50;
-            font-weight: bold;
+        td {
+            font-size: 1rem;
+            color: #555;
         }
 
-        a:hover {
-            color: #3498db;
+        tr:nth-child(even) {
+            background-color: #f5f5f5;
+        }
+
+        tr:hover {
+            background-color: #f0f4c3;
+            transition: background-color 0.3s ease;
+        }
+
+        button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        .btn-back {
+            margin: 10px 0 20px;
+            background: #4caf50;
+            color: white;
+            border-radius: 20px;
+            font-size: 1rem;
+            padding: 10px 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-back:hover {
+            background: #388e3c;
+        }
+
+        .btn-delete {
+            background: #e57373;
+            color: white;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-delete:hover {
+            background: #d32f2f;
+        }
+
+        .btn-update {
+            background: #64b5f6;
+            color: white;
+            margin-right: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-update:hover {
+            background: #1976d2;
+        }
+
+        input[type="text"] {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-right: 5px;
+            font-size: 0.9rem;
+        }
+
+        input[type="text"]:focus {
+            border-color: #64b5f6;
+            outline: none;
+            box-shadow: 0 0 5px rgba(100, 181, 246, 0.5);
+        }
+
+        @media screen and (max-width: 768px) {
+            table {
+                width: 100%;
+            }
+
+            th, td {
+                font-size: 0.85rem;
+            }
+
+            button {
+                font-size: 0.8rem;
+                padding: 8px 12px;
+            }
         }
     </style>
 </head>
 <body>
     <h1>Comment History</h1>
-    <table border="1">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Comment</th>
-                <th>Sentiment</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% if history %}
-                {% for entry in history %}
-                    <tr>
-                        <td>{{ entry.id }}</td>
-                        <td>{{ entry.comment }}</td>
-                        <td>{{ entry.sentiment }}</td>
-                    </tr>
-                {% endfor %}
-            {% else %}
-                <tr>
-                    <td colspan="3">No history available</td>
-                </tr>
-            {% endif %}
-        </tbody>
+    
+    <!-- Back Button -->
+    <button class="btn-back" onclick="window.location.href='/'">Back</button>
+
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Text</th>
+            <th>Sentiment</th>
+            <th>Language</th>
+            <th>Actions</th>
+        </tr>
+        {% for comment in comments %}
+        <tr>
+            <td>{{ comment.id }}</td>
+            <td>{{ comment.text }}</td>
+            <td>{{ comment.sentiment }}</td>
+            <td>{{ comment.language }}</td>
+            <td>
+                <!-- Update Button -->
+                <form action="/update/{{ comment.id }}" method="POST" style="display:inline;">
+                    <input type="text" name="new_text" placeholder="Update comment" required>
+                    <button type="submit" class="btn-update">Update</button>
+                </form>
+
+                <!-- Delete Button -->
+                <form action="/delete/{{ comment.id }}" method="POST" style="display:inline;">
+                    <button type="submit" class="btn-delete">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
     </table>
-    <a href="{{ url_for('analyze_sentiment') }}">Go Back to Home</a>
 </body>
 </html>

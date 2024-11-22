@@ -271,21 +271,41 @@ footer h4 {
         </div>
     </section>
     
+    <div class="container">
+        <h1>Sentiment Analysis</h1>
+    
+        <!-- Main Content -->
     <!-- Main Content -->
     <div class="container">
         <h1>Sentiment Analysis</h1>
-        <div class="form-group">
-            <label for="comment">Enter your comment:</label>
-            <textarea class="form-control" id="comment" name="comment" rows="3"></textarea>
-            <button type="button" class="btn btn-voice mt-2" onclick="startDictation()">🎤 Speak</button>
-        </div>
-        <button type="button" class="btn btn-primary" onclick="analyzeSentiment()">Analyze</button>
-        
+        <form method="POST" action="/">
+            <div class="form-group">
+                <label for="comment">Enter your comment:</label>
+                <textarea class="form-control" id="comment" name="comment" rows="3" required>{{ comment if comment else '' }}</textarea>
+                <button type="button" class="btn btn-voice mt-2" onclick="startDictation()">🎤 Speak</button>
+            </div>
+            <button type="submit" class="btn btn-primary">Analyze</button>
+        </form>
+
         <!-- Display sentiment result -->
-        <div id="result" class="mt-4"></div>
+        <div id="result" class="mt-4">
+            {% if sentiment %}
+                <p><strong>Sentiment:</strong> 
+                    {% if sentiment == 'positive' %}
+                        <span class="alert alert-success">Positive comment!</span>
+                    {% elif sentiment == 'negative' %}
+                        <span class="alert alert-danger">Negative comment!</span>
+                    {% else %}
+                        <span class="alert alert-warning">Neutral comment!</span>
+                    {% endif %}
+                </p>
+                <p><strong>Language:</strong> {{ language }}</p>
+            {% elif error %}
+                <p class="alert alert-danger">{{ error }}</p>
+            {% endif %}
+        </div>
     </div>
 
-   
     <!-- Footer Section -->
 <footer class="footer">
     <div class="footer-content">

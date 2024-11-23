@@ -87,8 +87,9 @@ def analyze_sentiment():
         db.session.commit()
 
         return render_template('index.html', sentiment=sentiment, language=detected_language)
+     # For GET request, show the form without any result
+    return render_template('index.html', sentiment=None, language=None, error=None)
 
-    return render_template('index.html')
 
 # Route to display history of comments
 @app.route('/history', methods=['GET'])

@@ -271,41 +271,32 @@ footer h4 {
         </div>
     </section>
     
-    <div class="container">
-        <h1>Sentiment Analysis</h1>
-    
-        <!-- Main Content -->
     <!-- Main Content -->
-    <div class="container">
-        <h1>Sentiment Analysis</h1>
-        <form method="POST" action="/">
-            <div class="form-group">
-                <label for="comment">Enter your comment:</label>
-                <textarea class="form-control" id="comment" name="comment" rows="3" required>{{ comment if comment else '' }}</textarea>
-                <button type="button" class="btn btn-voice mt-2" onclick="startDictation()">🎤 Speak</button>
-            </div>
-            <button type="submit" class="btn btn-primary">Analyze</button>
-        </form>
-
-        <!-- Display sentiment result -->
-        <div id="result" class="mt-4">
-            {% if sentiment %}
-                <p><strong>Sentiment:</strong> 
-                    {% if sentiment == 'positive' %}
-                        <span class="alert alert-success">Positive comment!</span>
-                    {% elif sentiment == 'negative' %}
-                        <span class="alert alert-danger">Negative comment!</span>
+    <body>
+        <div class="container mt-5">
+            <h1 class="mb-4">Sentiment Analysis</h1>
+            <form method="POST" action="/">
+                <div class="form-group">
+                    <label for="comment">Enter your comment:</label>
+                    <textarea class="form-control" id="comment" name="comment" rows="3"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Analyze</button>
+            </form>
+    
+            {% if sentiment is defined %}
+                <div class="mt-4">
+                    {% if sentiment == 1 %}
+                        <div class="alert alert-success" role="alert">Positive comment!</div>
                     {% else %}
-                        <span class="alert alert-warning">Neutral comment!</span>
+                        <div class="alert alert-danger" role="alert">Negative comment!</div>
                     {% endif %}
-                </p>
-                <p><strong>Language:</strong> {{ language }}</p>
-            {% elif error %}
-                <p class="alert alert-danger">{{ error }}</p>
+                </div>
             {% endif %}
         </div>
-    </div>
-
+    
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    </body>
+        
     <!-- Footer Section -->
 <footer class="footer">
     <div class="footer-content">

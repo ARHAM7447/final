@@ -43,11 +43,11 @@ body {
     background-color: #fff; /* White background for content area */
     border-radius: 8px; /* Rounded corners for a softer look */
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1); /* More depth with soft shadow */
-    transition: transform 0.3s ease-in-out;
+    transition: transform 0.3s ease; /* Standardized transition duration */
 }
 
 .container:hover {
-    transform: scale(1.03); /* Slight zoom effect on hover */
+    transform: scale(1.02); /* Slight zoom effect on hover */
 }
 
 h1 {
@@ -69,9 +69,12 @@ h1 {
     border: none;
 }
 
+/* Voice Button */
 .btn-voice {
+    background: #6c63ff; /* Fallback color */
     background: linear-gradient(135deg, #6c63ff, #00c6ff); /* Gradient from soft purple to cyan */
     color: white;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); /* Enhance contrast for accessibility */
 }
 
 .btn-voice:hover {
@@ -79,9 +82,12 @@ h1 {
     transform: scale(1.05); /* Slight zoom effect on hover */
 }
 
+/* History Button */
 .btn-history {
+    background: #ff6f61; /* Fallback color */
     background: linear-gradient(135deg, #ff6f61, #ffcc00); /* Gradient from coral to yellow */
     color: white;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); /* Enhance contrast for accessibility */
 }
 
 .btn-history:hover {
@@ -90,14 +96,32 @@ h1 {
 }
 
 /* Sentiment Result Styling */
-.alert {
+.container .alert {
     margin-top: 20px;
     font-weight: bold;
     text-align: center;
     padding: 15px;
     border-radius: 5px;
+    transition: transform 0.3s ease; /* Smooth appearance transitions */
+}
+
+/* Positive Alert */
+.container .alert-success {
+    background-color: #d4edda; /* Light green background for success */
+    color: #155724; /* Dark green text */
+    border: 1px solid #c3e6cb; /* Border for definition */
+}
+
+/* Negative Alert */
+.container .alert-danger {
     background-color: #f8d7da; /* Light red background for errors */
     color: #721c24; /* Dark red text */
+    border: 1px solid #f5c6cb; /* Border for definition */
+}
+
+/* Add transition consistency */
+.container .alert:hover {
+    transform: scale(1.02); /* Slight hover effect for alerts */
 }
 
 /* Footer Styling */
@@ -275,18 +299,19 @@ footer h4 {
     <body>
         <div class="container mt-5">
             <h1 class="mb-4">Sentiment Analysis</h1>
-            <form method="POST" action="/">
+            <form method="POST" action="/" >
                 <div class="form-group">
                     <label for="comment">Enter your comment:</label>
                     <textarea class="form-control" id="comment" name="comment" rows="3"></textarea>
                 </div>
                 <button type="submit" class="btn btn-primary">Analyze</button>
+                <button type="button" class="btn btn-secondary" id="voiceCommandBtn">Use Voice</button>
             </form>
     
             {% if sentiment is defined %}
                 <div class="mt-4">
                     {% if sentiment == 1 %}
-                        <div class="alert alert-success" role="alert">Positive comment!</div>
+                    <div class="alert alert-success" role="alert">Positive comment!</div>
                     {% else %}
                         <div class="alert alert-danger" role="alert">Negative comment!</div>
                     {% endif %}
@@ -330,73 +355,86 @@ footer h4 {
   
     
     <!-- Scripts -->
+      <!-- Script for voice input and sentiment analysis -->
     <script>
         // Web Speech API for voice recognition
-        function startDictation() {
-            if (window.hasOwnProperty('webkitSpeechRecognition')) {
-                var recognition = new webkitSpeechRecognition();
+        document.getElementById('voiceCommandBtn').addEventListener('click', () => {
+            if ('webkitSpeechRecognition' in window) {
+                const recognition = new webkitSpeechRecognition();
+                recognition.lang = "en-US";
                 recognition.continuous = false;
                 recognition.interimResults = false;
-                recognition.lang = "en-US";
+
                 recognition.start();
 
-                recognition.onresult = function(event) {
-                    document.getElementById('comment').value = event.results[0][0].transcript;
+                recognition.onresult = function (event) {
+                    const transcript = event.results[0][0].transcript;
+                    document.getElementById('comment').value = transcript;
                     recognition.stop();
+                    analyzeSentiment(); // Analyze sentiment after voice input
                 };
 
-                recognition.onerror = function(event) {
+                recognition.onerror = function () {
                     recognition.stop();
+                    alert("Voice recognition failed. Please try again.");
                 };
             } else {
                 alert("Your browser doesn't support speech recognition.");
             }
-        }
+        });
 
-        // Basic sentiment analysis function
+        // Sentiment analysis function
         function analyzeSentiment() {
-            var comment = document.getElementById('comment').value.toLowerCase();
-            var positiveWords = ['good', 'great', 'fantastic', 'amazing', 'happy', 'positive', 'love'];
-            var negativeWords = ['bad', 'terrible', 'awful', 'sad', 'hate', 'negative', 'horrible'];
+            const comment = document.getElementById('comment').value.toLowerCase();
+            const positiveWords = ['good', 'great', 'fantastic', 'amazing', 'happy', 'positive', 'love'];
+            const negativeWords = ['bad', 'terrible', 'awful', 'sad', 'hate', 'negative', 'horrible'];
 
-            var positiveCount = 0;
-            var negativeCount = 0;
+            let positiveCount = 0;
+            let negativeCount = 0;
 
-            positiveWords.forEach(function(word) {
+            positiveWords.forEach(word => {
                 if (comment.includes(word)) positiveCount++;
             });
 
-            negativeWords.forEach(function(word) {
+            negativeWords.forEach(word => {
                 if (comment.includes(word)) negativeCount++;
             });
 
-            var resultDiv = document.getElementById('result');
-            var sentimentText = '';
+            const resultDiv = document.getElementById('result');
+            let sentimentMessage = '';
 
             if (positiveCount > negativeCount) {
                 resultDiv.innerHTML = '<div class="alert alert-success" role="alert">Positive comment!</div>';
-                sentimentText = 'The comment is positive.';
+                sentimentMessage = 'This comment is positive.';
             } else if (negativeCount > positiveCount) {
                 resultDiv.innerHTML = '<div class="alert alert-danger" role="alert">Negative comment!</div>';
-                sentimentText = 'The comment is negative.';
+                sentimentMessage = 'This comment is negative.';
             } else {
                 resultDiv.innerHTML = '<div class="alert alert-warning" role="alert">Neutral comment!</div>';
-                sentimentText = 'The comment is neutral.';
+                sentimentMessage = 'This comment is neutral.';
             }
 
-            speakResult(sentimentText);
+            speakResult(sentimentMessage); // Speak the result
         }
 
-        // Speak result function
+        // Web Speech API for speech synthesis
         function speakResult(text) {
             if ('speechSynthesis' in window) {
-                var utterance = new SpeechSynthesisUtterance(text);
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'en-US';
                 window.speechSynthesis.speak(utterance);
             } else {
                 alert("Your browser doesn't support speech synthesis.");
             }
         }
+
+        // Event listener for form submission
+        document.getElementById('sentimentForm').addEventListener('submit', (event) => {
+            event.preventDefault(); // Prevent default form submission
+            analyzeSentiment();
+        });
     </script>
+   
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
